@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  blogs        Blog[]
+  likes        Like[]
+  comments     Comment[]
+  createdAt    DateTime  @default(now())
+}
+
+model Blog {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  slug        String    @unique
+  content     String
+  summary     String?   // Bonus: For the Async Job summary
+  isPublished Boolean   @default(false)
+  likes       Like[]
+  comments    Comment[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([slug])
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  blogId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, blogId]) // Requirement: Prevent duplicate likes
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  userId    String
+  blogId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([blogId])
+  @@index([createdAt])
+}
