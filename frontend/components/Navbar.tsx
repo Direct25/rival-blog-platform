@@ -13,7 +13,7 @@ export default function Navbar() {
                     RivalBlogs
                 </Link>
                 <div className="space-x-6 flex items-center">
-                    <Link href="/" className="text-gray-600 hover:text-blue-600 font-medium">Feed</Link>
+                    <Link href="/feed" className="text-gray-600 hover:text-blue-600 font-medium">Feed</Link>
                     {isLoggedIn ? (
                         <>
                             <Link href="/create" className="text-gray-600 hover:text-blue-600 font-medium">Write a Post</Link>
