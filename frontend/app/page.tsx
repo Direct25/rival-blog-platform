@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import api from "../lib/api";
+import Link from "next/link";
 
 export default function Home() {
   const [blogs, setBlogs] = useState([]);
@@ -32,7 +33,11 @@ export default function Home() {
         <div className="space-y-6">
           {blogs.map((blog: any) => (
             <div key={blog.id} className="p-6 bg-white rounded-lg shadow-sm border border-gray-100">
-              <h2 className="text-2xl font-bold mb-2 text-gray-900">{blog.title}</h2>
+              <h2 className="text-2xl font-bold mb-2 text-gray-900 hover:text-blue-600 transition">
+                <Link href={`/blog/${blog.slug}`}>
+                  {blog.title}
+                </Link>
+              </h2>
               <p className="text-sm text-gray-500 mb-4">
                 By {blog.user?.email} • {new Date(blog.createdAt).toLocaleDateString()}
               </p>
