@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import api from "../../lib/api";
 import Link from "next/link";
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -12,12 +13,14 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const router = useRouter();
 
+    // Add this inside the LoginPage component:
+    const { login } = useAuth();
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             const res = await api.post("/auth/login", { email, password });
-            Cookies.set("token", res.data.access_token, { expires: 1 });
-            window.location.href = "/"; // Redirect to home page after success
+            login(res.data.access_token); // Use the global login!
         } catch (err: any) {
             setError(err.response?.data?.message || "Invalid credentials");
         }

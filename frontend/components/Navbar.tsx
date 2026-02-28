@@ -1,25 +1,10 @@
 "use client";
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
-    const router = useRouter();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    // Check auth status by looking for the JWT token
-    useEffect(() => {
-        const token = Cookies.get('token');
-        setIsLoggedIn(!!token);
-    }, []);
-
-    const handleLogout = () => {
-        Cookies.remove('token');
-        setIsLoggedIn(false);
-        router.push('/login');
-    };
+    const { isLoggedIn, logout } = useAuth(); // Grabbing global state!
 
     return (
         <nav className="bg-white shadow-sm border-b p-4 sticky top-0 z-50">
@@ -32,7 +17,7 @@ export default function Navbar() {
                     {isLoggedIn ? (
                         <>
                             <Link href="/create" className="text-gray-600 hover:text-blue-600 font-medium">Write a Post</Link>
-                            <button onClick={handleLogout} className="text-red-500 hover:text-red-600 font-medium">Logout</button>
+                            <button onClick={logout} className="text-red-500 hover:text-red-600 font-medium">Logout</button>
                         </>
                     ) : (
                         <>
